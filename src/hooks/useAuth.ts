@@ -2,6 +2,20 @@ import { useEffect, useState } from 'react';
 import { User, Provider } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
+interface SignUpData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  mobileNumber: string;
+}
+
+interface SignInData {
+  identifier: string; // Can be email or username
+  password: string;
+}
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
