@@ -4,6 +4,7 @@ import { Editor } from '../pages/Editor';
 import { SharedImage } from '../pages/SharedImage';
 import { ProfilePage } from '../pages/ProfilePage';
 import { AuthCallback } from '../pages/AuthCallback';
+import { ResetPassword } from '../pages/ResetPassword';
 import { ProtectedRoute } from './ProtectedRoute';
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/auth/callback',
     element: <AuthCallback />
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />
   }
 ]);
 

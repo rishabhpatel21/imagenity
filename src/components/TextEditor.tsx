@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bold, Italic, Underline } from 'lucide-react';
+import { Bold, Italic, Underline, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 import { TextElement } from '../types';
 import { FONT_SIZES } from '../config/constants';
 import { TextEffectsPanel } from './effects/TextEffectsPanel';
@@ -21,6 +21,18 @@ export function TextEditor({ selectedText, onUpdate, fonts }: TextEditorProps) {
       onUpdate({ ...selectedText, ...updates });
     }
   };
+
+  const handlePositionChange = (deltaX: number, deltaY: number) => {
+    if (selectedText) {
+      onUpdate({
+        ...selectedText,
+        x: selectedText.x + deltaX,
+        y: selectedText.y + deltaY
+      });
+    }
+  };
+
+  const MOVE_STEP = 10; // pixels to move per click
 
   if (!selectedText) {
     return (
@@ -53,6 +65,47 @@ export function TextEditor({ selectedText, onUpdate, fonts }: TextEditorProps) {
 
       {activeTab === 'style' ? (
         <div className="space-y-4">
+          {/* Position Controls */}
+          <div className="space-y-2">
+            <h3 className="font-medium">Position</h3>
+            <div className="flex flex-col items-center gap-2">
+              {/* Up button */}
+              <button
+                onClick={() => handlePositionChange(0, -MOVE_STEP)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <ArrowUp className="w-5 h-5" />
+              </button>
+              
+              {/* Left/Right buttons */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => handlePositionChange(-MOVE_STEP, 0)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                  <span className="text-xs text-gray-400">Move</span>
+                </div>
+                <button
+                  onClick={() => handlePositionChange(MOVE_STEP, 0)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Down button */}
+              <button
+                onClick={() => handlePositionChange(0, MOVE_STEP)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <ArrowDown className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
           <div className="flex gap-4 mb-4">
             <button
               className={`p-2 rounded border ${selectedText.isBold ? 'bg-black border-white' : 'border-white/20'}`}

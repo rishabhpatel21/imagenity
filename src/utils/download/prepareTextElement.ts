@@ -28,14 +28,15 @@ export function prepareTextElement(
     fontWeight: text.isBold ? 'bold' : 'normal',
     fontStyle: text.isItalic ? 'italic' : 'normal',
     textDecoration: text.isUnderline ? 'underline' : 'none',
-    transform: 'none',
+    transform: 'none', // Remove any transform to use absolute positioning
     zIndex: zIndex.toString(),
     userSelect: 'none',
     whiteSpace: 'nowrap',
     lineHeight: '1',
     margin: '0',
     padding: '0',
-    display: 'block'
+    display: 'block',
+    pointerEvents: 'none' // Prevent any interaction during capture
   };
 
   Object.assign(textElement.style, styles);
