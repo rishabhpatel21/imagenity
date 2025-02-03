@@ -29,8 +29,24 @@ const router = createBrowserRouter([
     element: <AuthCallback />
   },
   {
+    // Update the reset password route to handle both paths
     path: '/reset-password',
-    element: <ResetPassword />
+    element: <ResetPassword />,
+    // Add a loader to handle the hash parameters
+    loader: ({ request }) => {
+      const url = new URL(request.url);
+      const hash = url.hash;
+      if (hash) {
+        // Parse the hash parameters
+        const params = new URLSearchParams(hash.substring(1));
+        return {
+          accessToken: params.get('access_token'),
+          refreshToken: params.get('refresh_token'),
+          type: params.get('type')
+        };
+      }
+      return null;
+    }
   }
 ]);
 
