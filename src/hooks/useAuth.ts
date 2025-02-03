@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, Provider } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 export function useAuth() {
@@ -36,6 +36,27 @@ export function useAuth() {
     if (error) throw error;
   };
 
+  const signInWithEmail = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+  };
+
+  const signUp = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -45,6 +66,8 @@ export function useAuth() {
     user,
     loading,
     signInWithGoogle,
+    signInWithEmail,
+    signUp,
     signOut
   };
 }
