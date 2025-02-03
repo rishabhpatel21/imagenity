@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { ProfileHeader } from '../components/profile/ProfileHeader';
 import { ImageGrid } from '../components/profile/ImageGrid';
-import { useUserImages } from '../hooks/useUserImages';
+import { Navbar } from '../components/landing/Navbar';
+import { useUserProfile } from '../hooks/useUserProfile';
 import { Loader2 } from 'lucide-react';
+import { AuthModal } from '../components/auth/AuthModal';
 import '../styles/animations.css';
 
 export function ProfilePage() {
   const { user } = useAuth();
-  const { images, loading, error } = useUserImages();
+  const { images, loading: imagesLoading, error: imagesError } = useUserImages();
+  const { profile, loading: profileLoading, error: profileError, updateProfile } = useUserProfile();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   if (!user) {
     return (
@@ -20,7 +24,7 @@ export function ProfilePage() {
     );
   }
 
-  if (loading) {
+  if (profileLoading || imagesLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-white animate-spin" />
@@ -28,6 +32,7 @@ export function ProfilePage() {
     );
   }
 
+  const error = profileError || imagesError;
   if (error) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -40,14 +45,23 @@ export function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <Navbar onSignUpClick={() => setShowAuthModal(true)} />
       <ProfileHeader 
         email={user.email || ''}
+        name={profile?.name || user.user_metadata?.full_name || ''}
+        avatarUrl={profile?.avatar_url || user.user_metadata?.avatar_url}
         imagesCount={images.length}
         joinDate={user.created_at}
+        onUpdateProfile={updateProfile}
       />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <ImageGrid images={images} />
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </div>
   );
 }

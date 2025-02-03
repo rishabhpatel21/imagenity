@@ -29,7 +29,7 @@ export function useAuth() {
           access_type: 'offline',
           prompt: 'consent',
         },
-        scopes: 'email profile phone',
+        scopes: 'email profile',
       }
     });
 
