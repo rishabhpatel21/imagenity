@@ -2,7 +2,9 @@
 
 An advanced web application that uses AI to intelligently place text behind image subjects, perfect for creating stunning visuals for social media, marketing materials, and creative projects.
 
-![Text Behind Image Demo](https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=630&fit=crop)
+- Live: imagenity.webxela.com
+
+![Text Behind Image Demo](https://raw.githubusercontent.com/rishabhpatel21/projects-images/refs/heads/main/Imagenity.png)
 
 ## 🚀 Features
 
