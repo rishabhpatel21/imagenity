@@ -6,6 +6,7 @@ An advanced web application that uses AI to intelligently place text behind imag
 
 ![Text Behind Image Demo](https://raw.githubusercontent.com/rishabhpatel21/projects-images/refs/heads/main/Imagenity.png)
 
+
 ## 🚀 Features
 
 - AI-powered background removal
