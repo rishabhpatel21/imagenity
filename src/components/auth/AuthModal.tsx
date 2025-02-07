@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { Modal } from '../ui/Modal';
 import { RegistrationForm } from './RegistrationForm';
 import { SignInForm } from './SignInForm';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
+import { AlertCircle } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -16,53 +17,28 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<'signup' | 'signin' | 'forgot-password'>('signup');
 
+  // Check for auth errors in localStorage
+  useEffect(() => {
+    const authError = localStorage.getItem('authError');
+    if (authError) {
+      setError(authError);
+      localStorage.removeItem('authError');
+    }
+  }, [isOpen]);
+
   const handleRegistrationComplete = async (formData: {
     email: string;
-    password: string;
     firstName: string;
     lastName: string;
     username: string;
     mobileNumber: string;
   }) => {
     try {
-      const { error: signUpError } = await signUp(formData);
-      
-      if (signUpError) {
-        if (signUpError.message === 'User already registered') {
-          setError('This email is already registered. Please try signing in instead.');
-        } else {
-          setError(signUpError.message);
-        }
-        return;
-      }
-
-      onSuccess?.();
-      onClose();
+      setError(null);
+      // Registration is now handled by the RegistrationForm component
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
     }
-  };
-
-  const handleSignIn = async (identifier: string, password: string) => {
-    try {
-      const { error: signInError } = await signIn({ identifier, password });
-      
-      if (signInError) {
-        setError('Invalid credentials');
-        return;
-      }
-
-      onSuccess?.();
-      onClose();
-    } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-    }
-  };
-
-  const handleForgotPasswordSuccess = () => {
-    setTimeout(() => {
-      onClose();
-    }, 3000);
   };
 
   return (
@@ -85,7 +61,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
       }
     >
       {error && (
-        <div className="mb-4 p-3 bg-red-900/30 border border-red-500/30 rounded-lg">
+        <div className="mb-4 p-4 bg-red-900/30 border border-red-500/30 rounded-lg flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-200">{error}</p>
         </div>
       )}
@@ -110,7 +87,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
       {mode === 'signin' && (
         <>
-          <SignInForm onSubmit={handleSignIn} />
+          <SignInForm onSubmit={() => {}} />
           <div className="mt-4 text-center text-sm text-gray-400 space-y-2">
             <p>
               Don't have an account?{' '}
@@ -141,7 +118,11 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
 
       {mode === 'forgot-password' && (
         <>
-          <ForgotPasswordForm onSuccess={handleForgotPasswordSuccess} />
+          <ForgotPasswordForm onSuccess={() => {
+            setTimeout(() => {
+              onClose();
+            }, 3000);
+          }} />
           <p className="mt-4 text-center text-sm text-gray-400">
             Remember your password?{' '}
             <button
